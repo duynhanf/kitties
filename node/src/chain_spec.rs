@@ -152,5 +152,6 @@ fn testnet_genesis(
 			key: Some(root_key),
 		},
 		transaction_payment: Default::default(),
+		substrate_kitties: SubstrateKittiesConfig { kitties: vec![] },
 	}
 }
