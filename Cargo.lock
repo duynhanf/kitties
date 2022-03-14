@@ -3881,6 +3881,7 @@ dependencies = [
  "frame-support",
  "frame-system",
  "log",
+ "pallet-timestamp",
  "parity-scale-codec",
  "scale-info",
  "serde",
