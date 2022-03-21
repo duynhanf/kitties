@@ -104,6 +104,7 @@ impl pallet_kitties::Config for Test {
 
 // Build genesis storage according to the mock runtime.
 pub fn new_test_ext() -> sp_io::TestExternalities {
+	// ref https://github.com/AcalaNetwork/Acala/blob/master/modules/dex/src/mock.rs#L214
 	let mut t = system::GenesisConfig::default().build_storage::<Test>().unwrap();
 	pallet_balances::GenesisConfig::<Test> {
 		balances: vec![
