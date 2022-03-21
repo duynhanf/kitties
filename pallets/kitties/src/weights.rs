@@ -60,4 +60,4 @@ fn create_kitty() -> Weight {
 			.saturating_add(RocksDbWeight::get().reads(6 as Weight))
 			.saturating_add(RocksDbWeight::get().writes(3 as Weight))
 	}
-	}
+}

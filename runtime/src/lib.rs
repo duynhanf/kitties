@@ -277,7 +277,7 @@ impl pallet_kitties::Config for Runtime {
 	type Currency = Balances;
 	type KittyRandomness = RandomnessCollectiveFlip;
 	type MaxKittyOwned = MaxKittyOwned;
-	type WeightInfo = pallet_kitties::weights::SubstrateWeightInfo<Runtime>
+	type WeightInfo = pallet_kitties::weights::SubstrateWeightInfo<Runtime>;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.

@@ -7,7 +7,7 @@ fn a_new_kitty_should_be_created() {
 	new_test_ext().execute_with(|| {
 		System::set_block_number(1);
 		// Dispatch create_kitty() extrinsic
-		assert_ok!(SubstrateKitties::create_kitty(Origin::signed(1)));
+		assert_ok!(SubstrateKitties::create_kitty(Origin::signed(ALICE)));
 		// Read pallet storage and assert an expected result.
 		assert_eq!(SubstrateKitties::kitty_cnt(), 1);
 	});
@@ -20,12 +20,12 @@ fn origin_can_set_price_for_kitty() {
 		System::set_block_number(1);
 
 		// create a new kitty
-		let _ = SubstrateKitties::create_kitty(Origin::signed(1));
+		let _ = SubstrateKitties::create_kitty(Origin::signed(ALICE));
 
 		// get kitty id
-		let kitty_id = SubstrateKitties::kitties_owned(1)[0];
+		let kitty_id = SubstrateKitties::kitties_owned(ALICE)[0];
 
-		assert_ok!(SubstrateKitties::set_price(Origin::signed(1), kitty_id, Some(1000)));
+		assert_ok!(SubstrateKitties::set_price(Origin::signed(ALICE), kitty_id, Some(1000)));
 
 		let kitty = SubstrateKitties::kitties(&kitty_id).unwrap();
 
@@ -39,13 +39,13 @@ fn others_cannot_set_price_for_kitty() {
 		System::set_block_number(1);
 
 		// create a new kitty
-		let _ = SubstrateKitties::create_kitty(Origin::signed(1));
+		let _ = SubstrateKitties::create_kitty(Origin::signed(ALICE));
 
 		// get kitty id
-		let kitty_id = SubstrateKitties::kitties_owned(1)[0];
+		let kitty_id = SubstrateKitties::kitties_owned(ALICE)[0];
 
 		assert_err!(
-			SubstrateKitties::set_price(Origin::signed(2), kitty_id, Some(1000)),
+			SubstrateKitties::set_price(Origin::signed(BOB), kitty_id, Some(1000)),
 			Error::<Test>::NotKittyOwner
 		);
 	});
@@ -59,13 +59,13 @@ fn owner_can_transfer_kitty() {
 		System::set_block_number(1);
 
 		// create a new kitty
-		let _ = SubstrateKitties::create_kitty(Origin::signed(1));
+		let _ = SubstrateKitties::create_kitty(Origin::signed(ALICE));
 
 		// get kitty id
-		let kitty_id = SubstrateKitties::kitties_owned(1)[0];
+		let kitty_id = SubstrateKitties::kitties_owned(ALICE)[0];
 
-		// transfer to 2
-		assert_ok!(SubstrateKitties::transfer(Origin::signed(1), 2, kitty_id));
+		// transfer to bob
+		assert_ok!(SubstrateKitties::transfer(Origin::signed(ALICE), BOB, kitty_id));
 
 		let kitty = SubstrateKitties::kitties(&kitty_id).unwrap();
 
@@ -80,13 +80,13 @@ fn others_cannot_transfer_kitty() {
 		System::set_block_number(1);
 
 		// create a new kitty
-		let _ = SubstrateKitties::create_kitty(Origin::signed(1));
+		let _ = SubstrateKitties::create_kitty(Origin::signed(ALICE));
 
 		// get kitty id
-		let kitty_id = SubstrateKitties::kitties_owned(1)[0];
+		let kitty_id = SubstrateKitties::kitties_owned(ALICE)[0];
 
 		assert_err!(
-			SubstrateKitties::transfer(Origin::signed(2), 3, kitty_id),
+			SubstrateKitties::transfer(Origin::signed(BOB), ALICE_2, kitty_id),
 			Error::<Test>::NotKittyOwner
 		);
 	});
@@ -98,14 +98,14 @@ fn owner_cannot_transfer_to_self() {
 		System::set_block_number(1);
 
 		// create a new kitty
-		let _ = SubstrateKitties::create_kitty(Origin::signed(1));
+		let _ = SubstrateKitties::create_kitty(Origin::signed(ALICE));
 
 		// get kitty id
-		let kitty_id = SubstrateKitties::kitties_owned(1)[0];
+		let kitty_id = SubstrateKitties::kitties_owned(ALICE)[0];
 
 		// send kitty to self
 		assert_err!(
-			SubstrateKitties::transfer(Origin::signed(1), 1, kitty_id),
+			SubstrateKitties::transfer(Origin::signed(ALICE), ALICE, kitty_id),
 			Error::<Test>::TransferToSelf
 		);
 	});
@@ -117,13 +117,13 @@ fn owner_cannot_transfer_to_self() {
 // 		System::set_block_number(1);
 
 // 		// create a new kitty
-// 		let _ = SubstrateKitties::create_kitty(Origin::signed(1));
+// 		let _ = SubstrateKitties::create_kitty(Origin::signed(ALICE));
 
 // 		// get kitty id
 // 		let kitty_id = SubstrateKitties::kitties_owned(1)[0];
 
 // 		assert_err!(
-// 			SubstrateKitties::transfer(Origin::signed(1), 1, kitty_id),
+// 			SubstrateKitties::transfer(Origin::signed(ALICE), 1, kitty_id),
 // 			Error::<Test>::TransferToSelf
 // 		);
 // 	});
@@ -137,7 +137,7 @@ fn owner_cannot_transfer_to_self() {
 // 		System::set_block_number(1);
 
 // 		// create a new kitty
-// 		let _ = SubstrateKitties::create_kitty(Origin::signed(1));
+// 		let _ = SubstrateKitties::create_kitty(Origin::signed(ALICE));
 
 // 		// get kitty id
 // 		let kitty_id = SubstrateKitties::kitties_owned(1)[0];
