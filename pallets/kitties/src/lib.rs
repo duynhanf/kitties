@@ -2,8 +2,22 @@
 
 pub use pallet::*;
 
+#[cfg(test)]
+mod mock;
+
+#[cfg(test)]
+mod tests;
+
+#[cfg(feature = "runtime-benchmarks")]
+mod benchmarking;
+
+pub mod weights;
+
+pub use weights::WeightInfo;
+
 #[frame_support::pallet]
 pub mod pallet {
+	use crate::WeightInfo;
 	use frame_support::pallet_prelude::*;
 	use frame_support::{
 		sp_runtime::traits::Hash,
@@ -13,7 +27,7 @@ pub mod pallet {
 	use frame_system::pallet_prelude::*;
 	use scale_info::TypeInfo;
 	use sp_io::hashing::blake2_128;
-	// use pallet_timestamp::Config;
+	use sp_std::vec::Vec;
 
 	#[cfg(feature = "std")]
 	use frame_support::serde::{Deserialize, Serialize};
@@ -23,7 +37,7 @@ pub mod pallet {
 		<<T as Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
 
 	// Struct for holding Kitty information.
-	#[derive(Clone, Encode, Decode, PartialEq, RuntimeDebug, TypeInfo, MaxEncodedLen)]
+	#[derive(Clone, Encode, Decode, PartialEq, TypeInfo, MaxEncodedLen)]
 	#[scale_info(skip_type_params(T))]
 	#[codec(mel_bound())]
 	pub struct Kitty<T: Config> {
@@ -32,6 +46,23 @@ pub mod pallet {
 		pub gender: Gender,
 		pub owner: AccountOf<T>,
 		pub date_created: T::Moment,
+	}
+
+	impl<T: Config> sp_std::fmt::Display for Kitty<T> {
+		fn fmt(&self, f: &mut sp_std::fmt::Formatter<'_>) -> sp_std::fmt::Result {
+			write!(
+				f,
+				"Kitty (dna: {:?},price: {:?}, gender: {:?}, owner: {:?}, date_created: {:?})",
+				self.dna, self.price, self.gender, self.owner, self.date_created
+			)
+		}
+	}
+
+	#[derive(Clone, Encode, Decode, PartialEq, RuntimeDebug, TypeInfo)]
+	#[scale_info(skip_type_params(T))]
+	pub struct Metadata {
+		name: Vec<u8>,
+		age: u8,
 	}
 
 	// Enum declaration for Gender.
@@ -62,7 +93,7 @@ pub mod pallet {
 		/// The type of Randomness we want to specify for this pallet.
 		type KittyRandomness: Randomness<Self::Hash, Self::BlockNumber>;
 
-		// type DateCreated: Time;
+		type WeightInfo: WeightInfo;
 	}
 
 	// Errors.
@@ -163,7 +194,7 @@ pub mod pallet {
 		/// Create a new unique kitty.
 		///
 		/// The actual kitty creation is done in the `mint()` function.
-		#[pallet::weight(100)]
+		#[pallet::weight(<T as Config>::WeightInfo::create_kitty())]
 		pub fn create_kitty(origin: OriginFor<T>) -> DispatchResult {
 			let sender = ensure_signed(origin)?;
 
@@ -307,7 +338,7 @@ pub mod pallet {
 	//** Our helper functions.**//
 
 	impl<T: Config> Pallet<T> {
-		fn gen_gender() -> Gender {
+		pub fn gen_gender() -> Gender {
 			let random = T::KittyRandomness::random(&b"gender"[..]).0;
 			match random.as_ref()[0] % 2 {
 				0 => Gender::Male,
@@ -315,7 +346,7 @@ pub mod pallet {
 			}
 		}
 
-		fn gen_dna() -> [u8; 16] {
+		pub fn gen_dna() -> [u8; 16] {
 			let payload = (
 				T::KittyRandomness::random(&b"dna"[..]).0,
 				<frame_system::Pallet<T>>::extrinsic_index().unwrap_or_default(),
