@@ -2,19 +2,24 @@
 
 use super::*;
 
-#[allow(unused)]
-use crate::Pallet as Template;
-use frame_benchmarking::{benchmarks, whitelisted_caller};
+use crate::Pallet as KittiesPallet;
+use frame_benchmarking::{account, benchmarks, whitelisted_caller};
 use frame_system::RawOrigin;
 
-benchmarks! {
-	do_something {
-		let s in 0 .. 100;
-		let caller: T::AccountId = whitelisted_caller();
-	}: _(RawOrigin::Signed(caller), s)
-	verify {
-		assert_eq!(Something::<T>::get(), Some(s));
-	}
+const SEED: u32 = 0;
 
-	impl_benchmark_test_suite!(Template, crate::mock::new_test_ext(), crate::mock::Test);
+benchmarks! {
+	// create kitty
+	create_kitty {
+		let caller: T::AccountId = account("Alice", 1, SEED);
+	}: create_kitty(RawOrigin::Signed(caller))
+
+	// set price for kitty
+	// set_price {
+	// 	let s in 0 .. 1000;
+	// 	let caller: T::AccountId = account("Alice", 1, SEED);
+	// 	// let kitty_id = crate::lib::pallet::KittiesPa
+	// 	let _ = pallet_balances::TotalIssuance().unwrap()
+	// }: _(RawOrigin::Signed(caller), kitty_id, Some(1000u32.into()))
+	impl_benchmark_test_suite!(KittiesPallet, crate::mock::new_test_ext(), crate::mock::Test);
 }
