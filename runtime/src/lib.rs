@@ -410,6 +410,16 @@ impl_runtime_apis! {
 		}
 	}
 
+	impl pallet_kitties_rpc_runtime_api::KittyApi<Block> for Runtime {
+		fn query_kitty_info() -> u32 {
+			SubstrateKitties::query_kitty_info()
+		}
+
+		fn get_kitty_count() -> u64 {
+			SubstrateKitties::kitty_cnt()
+		}
+	}
+
 	impl sp_session::SessionKeys<Block> for Runtime {
 		fn generate_session_keys(seed: Option<Vec<u8>>) -> Vec<u8> {
 			opaque::SessionKeys::generate(seed)
