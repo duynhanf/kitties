@@ -1,0 +1,10 @@
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "author_insertKey",
+  "params": [
+    "aura",
+    "youth educate flame pony crystal indicate scatter immune pretty paddle display smart",
+    "0x81bbe8ca4fdbaa010c41b0ec8199f6648e86146294489658248e82c184c099a9"
+  ]
+}

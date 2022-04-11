@@ -1,0 +1,10 @@
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "author_insertKey",
+  "params": [
+    "aura",
+    "because mimic market update velvet suffer journey raccoon company royal convince shoot",
+    "0xd5cd2a4406d231b02ee02fcdbb47812f1f35b237849afbd0b67c09b77c82d684"
+  ]
+}
