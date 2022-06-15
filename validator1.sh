@@ -1,0 +1,11 @@
+./target/release/node-kitties \
+--base-path ./data/node01 \
+--chain ./kitty_spec.json \
+--port 30333 \
+--ws-port 9945 \
+--rpc-port 9933 \
+--telemetry-url "wss://telemetry.polkadot.io/submit/ 0" \
+--validator \
+--rpc-methods Unsafe \
+--name MyNode01 \
+--node-key 0xc49a632bc29af393b9fbe2571cd5b84ae6ad664d2ea70bcff500f43b02d0ef8d

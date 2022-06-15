@@ -1,0 +1,10 @@
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "author_insertKey",
+  "params": [
+    "aura",
+    "super method gate general art base orphan bounce reject sphere when artefact",
+    "0x6a621cd177b805482a542252bab82278c98873f8a77bf7dcab839cee6e0964e0"
+  ]
+}
